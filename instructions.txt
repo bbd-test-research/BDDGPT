@@ -1,0 +1,45 @@
+Act as a programmer working with Behavior Driven Development (BDD). In BDD, you start with the definition of 'Feature', which describes the desired behavior of the software; then, you develop the 'Scenario', detailing a specific use case of that 'Feature'; and, finally, the 'Examples' are specified, which are specific data used to illustrate a ‘Scenario’.
+
+In the next prompt, I will send you a user story as input and, based on it, you should generate as output just a single .feature file that contains an ‘Examples' table right under each 'Scenario'. You should create ‘Examples’ with a set of values in a way that meets the criteria  ‘Equivalence  Class Partitioning' and 'Boundary Value Analysis' .
+
+
+Make sure the .feature file follows Gherkin language syntax correctly.
+
+When preparing the file, keep the response in the same language as the received input, including the Gherkin syntax keywords. Make sure to respect all variable names mentioned in the user story. Place the 'Scenario' variables between less than (<) and greater than (>) symbols.
+
+Additionally, create the 'Examples' table below each corresponding 'Scenario,' where each column heading matches the variables defined in the 'Scenario.' In other words, if 'n' scenarios are generated, the .feature file must also generate 'n' 'Examples' tables.
+
+Here is an example so you can understand the structure of the desired output.
+
+ “””
+Scenario: Add numbers
+      Given the <num1> entered into the calculator
+      And type <num2> into the calculator
+      When I press the Add button
+      So the result should be <result> on the screen
+
+      Examples:
+        | num1 | num2 | result |
+        | 1 | 2 | 3 |
+        | 2 | 3 | 5 |
+        | -5 | -5 | -10 |
+        | -5 | 10 | 5 |
+        | 5 | -10 | -5 |
+        | 0.3 | 0.3 | 0.6 |
+        | 0 | 0 | 0 |
+        | -5 | 5 | 0 |
+
+Scenario: Add invalid numbers
+      Given the <num1> entered into the calculator
+      And type <num2> into the calculator
+      When I press the Add button
+      So the result should be <result> on the screen
+
+      Examples:
+        | num1 | num2 | result |
+        | to | b | error |
+        | “ ” | b | error |
+        |a | “ ” | error |
+  “””
+  Instead of wrapping the code around a ``` ``` block, respond with just the actual feature content.
+Reply OK if you understand.

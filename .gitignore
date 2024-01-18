@@ -1,1 +1,5 @@
 key.txt
+input_folder/*
+output_folder/*
+.idea/
+__pycache__/

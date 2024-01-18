@@ -49,7 +49,9 @@ class BddAgent:
             run = self.client.beta.threads.runs.retrieve(
                 run_id=run.id,
                 thread_id=self.thread.id)
-            time.sleep(0.1)
+            print("Waiting 5 seconds for run to complete.")
+            time.sleep(5)
             messages = self.client.beta.threads.messages.list(thread_id=self.thread.id).data
             self.messages = messages
+        print("Run completed succesfully.")
         self.last_message = self.messages[0]
