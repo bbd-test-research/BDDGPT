@@ -1,45 +1,42 @@
-Act as a programmer working with Behavior Driven Development (BDD). In BDD, you start with the definition of 'Feature', which describes the desired behavior of the software; then, you develop the 'Scenario', detailing a specific use case of that 'Feature'; and, finally, the 'Examples' are specified, which are specific data used to illustrate a ‘Scenario’.
+Atue como um programador trabalhando com Behavior Driven Development (BDD). No BDD, você começa com a definição de 'Funcionalidade', que descreve o comportamento desejado do software; em seguida, você elabora o 'Cenário', detalhando um caso de uso específico dessa 'Funcionalidade'; e, por fim, são especificados os 'Exemplos', que são dados específicos utilizados para ilustrar um ‘Cenário’.
 
-In the next prompt, I will send you a user story as input and, based on it, you should generate as output just a single .feature file that contains an ‘Examples' table right under each 'Scenario'. You should create ‘Examples’ with a set of values in a way that meets the criteria  ‘Equivalence  Class Partitioning' and 'Boundary Value Analysis' .
+No próximo prompt eu irei te enviar uma história de usuário como entrada e, com base nela, gerar como saída apenas um único arquivo .feature que contém um conjunto de 'Exemplos' logo abaixo de cada 'Cenário'.   Você deverá criar  'Exemplos ' com um conjunto de valores de forma a atender os critérios de 'Particionamento em Classes de Equivalência' e 'Análise do Valor Limite' .
 
+Certifique-se de que o arquivo .feature siga a sintaxe da linguagem Gherkin corretamente.
 
-Make sure the .feature file follows Gherkin language syntax correctly.
+Ao elaborar o arquivo, mantenha a resposta no mesmo idioma da entrada recebida, incluindo as palavras-chaves da sintaxe Gherkin. Certifique-se de respeitar todos os nomes de variáveis citados na história do usuário. Coloque as variáveis do 'Cenário' entre sinais de menor que (<) e maior que (>).
 
-When preparing the file, keep the response in the same language as the received input, including the Gherkin syntax keywords. Make sure to respect all variable names mentioned in the user story. Place the 'Scenario' variables between less than (<) and greater than (>) symbols.
+Além disso, crie a tabela de 'Exemplos' abaixo de cada 'Cenário' correspondente, onde cada título de coluna corresponde às variáveis definidas no 'Cenário'. Ou seja, se forem gerados 'n' cenários, então o arquivo .feature também deverá gerar 'n' tabelas de 'Exemplos'.
 
-Additionally, create the 'Examples' table below each corresponding 'Scenario,' where each column heading matches the variables defined in the 'Scenario.' In other words, if 'n' scenarios are generated, the .feature file must also generate 'n' 'Examples' tables.
+Segue um exemplo para você entender a estrutura de como queremos que seja a saída.
 
-Here is an example so you can understand the structure of the desired output.
+“””
+Cenário: Adicionar números
+     Dado o <num1>  inserido na calculadora
+     E  digitar <num2> na calculadora
+     Quando pressiono o botão Add
+     Então o resultado deve ser <resultado> na tela
 
+     Exemplos:
+       | num1 | num2 | resultado |
+       | 1 | 2 | 3 |
+       | 2 | 3 | 5 |
+       | -5 | -5 | -10 |
+       | -5 | 10 | 5 |
+       | 5 | -10 | -5 |
+       | 0.3 | 0.3 | 0.6 |
+       | 0 | 0 | 0 |
+       | -5 | 5 | 0 |
+
+Cenário: Adicionar números inválidos
+     Dado o <num1>  inserido na calculadora
+     E  digitar <num2> na calculadora
+     Quando pressiono o botão Add
+     Então o resultado deve ser <resultado> na tela
+
+     Exemplos:
+       | num1 | num2 | resultado |
+       | a | b | error |
+       | “ ” | b | error |
+       |a |  “ ” | error |
  “””
-Scenario: Add numbers
-      Given the <num1> entered into the calculator
-      And type <num2> into the calculator
-      When I press the Add button
-      So the result should be <result> on the screen
-
-      Examples:
-        | num1 | num2 | result |
-        | 1 | 2 | 3 |
-        | 2 | 3 | 5 |
-        | -5 | -5 | -10 |
-        | -5 | 10 | 5 |
-        | 5 | -10 | -5 |
-        | 0.3 | 0.3 | 0.6 |
-        | 0 | 0 | 0 |
-        | -5 | 5 | 0 |
-
-Scenario: Add invalid numbers
-      Given the <num1> entered into the calculator
-      And type <num2> into the calculator
-      When I press the Add button
-      So the result should be <result> on the screen
-
-      Examples:
-        | num1 | num2 | result |
-        | to | b | error |
-        | “ ” | b | error |
-        |a | “ ” | error |
-  “””
-  Instead of wrapping the code around a ``` ``` block, respond with just the actual feature content.
-Reply OK if you understand.

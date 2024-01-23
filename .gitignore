@@ -1,5 +1,8 @@
 key.txt
-input_folder/*
+input_folder_portugues/*
 output_folder/*
 .idea/
+result*
 __pycache__/
+input*
+output*

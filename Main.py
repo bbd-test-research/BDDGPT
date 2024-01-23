@@ -40,20 +40,24 @@ class Main:
 
         os.environ["OPENAI_API_KEY"] = cls.file_to_string("key.txt")
         cls.string_to_file(f"{output_folder_path}instruction_used.txt", instruction)
-        for input_file_name in os.listdir(input_folder_path):
-            for i in range(1, 6):
-                print(f"======================= new iteration: {i}")
-
+        input_file_name_list = os.listdir(input_folder_path)
+        for i, input_file_name in enumerate(input_file_name_list):
+            print(f"================== new file: {i+1} out of {len(input_file_name_list)}")
+            for j in range(1, 6):
+                print(f"======================= new iteration: {j} out of 5")
                 input_file_path = f"{input_folder_path}{input_file_name}"
-                output_file_path = f"{output_folder_path}{Path(input_file_name).stem}{i}.feature"
+                output_file_path = f"{output_folder_path}{Path(input_file_name).stem}{j}.feature"
+                if os.path.exists(output_file_path):
+                    print("File already exists. Continuing")
+                    continue
                 while True:
                     try:
                         cls.user_story_to_feature(input_file_path, output_file_path, instruction)
                         break
                     except Exception as e:
                         print(f"Error processing input file {input_file_path}.")
-                        print("Waiting 15 seconds before trying again")
-                        time.sleep(15)
+                        print("Waiting 45 seconds before trying again")
+                        time.sleep(45)
                         print("trying again.")
 
 
