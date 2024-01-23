@@ -1,57 +1,48 @@
+import os
+import random
 import time
 
 from openai import OpenAI
 
+from Utils import Utils
+
 
 class BddAgent:
+
     def __init__(self):
-        self.last_message = None
+        os.environ["OPENAI_API_KEY"] = Utils.file_to_string("key.txt")
         self.client = OpenAI()
-        self.assistant = self.client.beta.assistants.retrieve(assistant_id='asst_vd1TP6tR9mJJWrYT6JqPt0Si')
-        self.thread = None
-        self.messages = None
+        self.output_folder_path = "output_folder/"
+        self.input_folder_path = "input_folder/"
+        self.instruction = Utils.file_to_string("instructions.txt")
 
-    def initialize_thread(self):
-        self.thread = self.client.beta.threads.create()
+    def run(self, iterations_per_input, instruction=None, model="gpt-3.5-turbo-1106"):
+        if instruction is None:
+            instruction = self.instruction
+        Utils.string_to_file(f"{self.output_folder_path}instruction_used.txt", self.instruction)
+        # if the stream parameter is not set to true, the completion executes synchronously
+        file_names = os.listdir(self.input_folder_path)
+        for file_name in file_names:
+            c = 0
 
-    def add_message(self, message: str):
-        if self.thread is None:
-            self.initialize_thread()
-        self.client.beta.threads.messages.create(
-            thread_id=self.thread.id,
-            role="user",
-            content=message
-        )
-        self.messages = self.client.beta.threads.messages.list(self.thread.id).data
-        self.last_message = self.messages[0]
-
-    def run(self, instructions: str = None):
-        run = self.client.beta.threads.runs.create(
-            thread_id=self.thread.id,
-            assistant_id=self.assistant.id,
-            instructions=instructions
-        )
-        while run.status != "completed":
-            # run status cycle guide: https://platform.openai.com/docs/assistants/how-it-works/runs-and-run-steps
-            # observation: the code below checks only for the status required in this test. If modifying, check the guide
-            # above.
-            if run.status == "failed":
-                print("Run failed")
-                exit(-1)
-            if run.status == "cancelled":
-                print("Run cancelled")
-
-                exit(-1)
-            if run.status in ["expired", "requires_action"]:
-                print("Requires action and/or expired")
-                exit(-1)
-
-            run = self.client.beta.threads.runs.retrieve(
-                run_id=run.id,
-                thread_id=self.thread.id)
-            print("Waiting 5 seconds for run to complete.")
-            time.sleep(5)
-            messages = self.client.beta.threads.messages.list(thread_id=self.thread.id).data
-            self.messages = messages
-        print("Run completed succesfully.")
-        self.last_message = self.messages[0]
+            messages = [{"role": "user", "content": Utils.file_to_string(f"{self.input_folder_path}{file_name}")}]
+            if instruction:
+                messages.append({"role": "system", "content": instruction})
+                messages.reverse()
+            print("messages: ", messages)
+            while c < iterations_per_input:
+                output_path = f"{self.output_folder_path}{os.path.splitext(file_name)[0]}_{c + 1}.feature"
+                try:
+                    completion = self.client.chat.completions.create(
+                        model=model,
+                        messages=messages,
+                        # messages=[{"role": "user", "content": "Say this is a test"}],
+                        temperature=0,
+                    )
+                    Utils.string_to_file(output_path, completion.choices[0].message.content)
+                    c += 1
+                except Exception as e:
+                    print(f"Error!")
+                    print(e)
+                    print("Trying again in 30 seconds")
+                    time.sleep(30)
